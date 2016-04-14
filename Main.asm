@@ -1,7 +1,7 @@
 TITLE DrawingTool Application
 
-.386 
-.model flat,stdcall 
+.386
+.model flat,stdcall
 option casemap:none
 
 WinMain proto :DWORD, :DWORD, :DWORD, :DWORD
@@ -18,7 +18,7 @@ INCLUDELIB gdi32.lib
 ;======================== DATA ========================
 .data
 
-; ¸÷ÖÖ±àºÅ
+; å„ç§ç¼–å·
 IDM_OPT1  dw 301
 IDM_OPT2  dw 302
 IDM_OPT3  dw 303
@@ -31,30 +31,30 @@ IDB_ONE   dw 3301
 IDB_TWO   dw 3302
 IDB_THREE dw 3303
 
-; ²Ëµ¥×Ö·û´®
-fileMenuStr db "ÎÄ¼ş", 0
-newMenuStr db "ĞÂ½¨", 0
-loadMenuStr db "ÔØÈë", 0
-saveMenuStr db "±£´æ", 0
-saveAsMenuStr db "Áí´æÎª", 0
+; èœå•å­—ç¬¦ä¸²
+fileMenuStr db "æ–‡ä»¶", 0
+newMenuStr db "æ–°å»º", 0
+loadMenuStr db "è½½å…¥", 0
+saveMenuStr db "ä¿å­˜", 0
+saveAsMenuStr db "å¦å­˜ä¸º", 0
 
-fileMenuStr1 db "»æÍ¼", 0
-drawMenuStr db "»­Í¼", 0
-eraseMenuStr db "²Á³ı", 0
+fileMenuStr1 db "ç»˜å›¾", 0
+drawMenuStr db "ç”»å›¾", 0
+eraseMenuStr db "æ“¦é™¤", 0
 
-; °´Å¥×Ö·û´®
-lineButtonStr db "Ö±Ïß", 0
+; æŒ‰é’®å­—ç¬¦ä¸²
+lineButtonStr db "ç›´çº¿", 0
 
-; ÀàÃûÒÔ¼°³ÌĞòÃû
+; ç±»åä»¥åŠç¨‹åºå
 className db "DrawingWinClass", 0
-appName db "»­Í¼", 0
+appName db "ç”»å›¾", 0
 
-; ¾ä±úµÈ±äÁ¿
+; å¥æŸ„ç­‰å˜é‡
 hInstance HINSTANCE ?
 hMenu HMENU ?
 commandLine LPSTR ?
 
-; ÔÓÏî
+; æ‚é¡¹
 buttonStr db "Button", 0
 beginX dd 0
 beginY dd 0
@@ -68,13 +68,13 @@ pointX dd 0
 pointY dd 0
 drawingFlag db 0
 erasingFlag db 0
-; »­Í¼/²Á³ıÄ£Ê½
+; ç”»å›¾/æ“¦é™¤æ¨¡å¼
 mode db 0
 
-; ¹¤×÷ÇøÓò
+; å·¥ä½œåŒºåŸŸ
 workRegion RECT <0, 0, 800, 600>
 
-; ½á¹¹Ìå¶¨Òå
+; ç»“æ„ä½“å®šä¹‰
 PAINTDATA STRUCT
 	ptBeginX dd ?
 	ptBeginY dd ?
@@ -94,7 +94,7 @@ start:
 	INVOKE WinMain, hInstance, NULL, commandLine, SW_SHOWDEFAULT
 	INVOKE ExitProcess, eax
 
-; ´´½¨²Ëµ¥
+; åˆ›å»ºèœå•
 createMenu PROC
 	LOCAL popFile: HMENU
 	LOCAL popFile1: HMENU
@@ -110,7 +110,7 @@ createMenu PROC
 
 	INVOKE CreatePopupMenu
 	mov popFile1, eax
-	
+
 	INVOKE AppendMenu, hMenu, MF_POPUP, popFile, ADDR fileMenuStr
 
 	INVOKE AppendMenu, popFile, MF_STRING, IDM_OPT1, ADDR newMenuStr
@@ -119,7 +119,7 @@ createMenu PROC
 	INVOKE AppendMenu, popFile, MF_STRING, IDM_OPT4, ADDR saveAsMenuStr
 
 	INVOKE AppendMenu, hMenu, MF_POPUP, popFile1, ADDR fileMenuStr1
-	
+
 	INVOKE AppendMenu, popFile1, MF_STRING, IDM_DRAW, ADDR drawMenuStr
 	INVOKE AppendMenu, popFile1, MF_STRING, IDM_ERASE, ADDR eraseMenuStr
 
@@ -127,10 +127,10 @@ createMenu PROC
 
 createMenu ENDP
 
-; ´´½¨°´Å¥
+; åˆ›å»ºæŒ‰é’®
 createButtons PROC,
 	hWnd: HWND
-	
+
 	;INVOKE CreateWindowEx, NULL, ADDR buttonStr, ADDR lineButtonStr, WS_VISIBLE or WS_CHILD or BS_PUSHBUTTON, 35, 10, 80, 30, hWnd, IDB_ONE, hInstance, NULL
 
 	ret
@@ -189,13 +189,13 @@ WndProc PROC USES ebx ecx edx,
 		INVOKE PostQuitMessage, NULL
 	.ELSEIF uMsg == WM_CREATE
 		INVOKE createButtons, hWnd
-	.ELSEIF uMsg == WM_COMMAND	; ÏìÓ¦ÊÂ¼ş
+	.ELSEIF uMsg == WM_COMMAND	; å“åº”äº‹ä»¶
 		mov ebx, wParam
 		.IF bx == IDB_ONE
 			;INVOKE ShowWindow, hWnd, SW_HIDE
-		.ELSEIF bx == IDM_DRAW  ; »­Í¼Ä£Ê½
+		.ELSEIF bx == IDM_DRAW  ; ç”»å›¾æ¨¡å¼
 			mov mode,0
-		.ELSEIF bx == IDM_ERASE ; ²Á³ıÄ£Ê½
+		.ELSEIF bx == IDM_ERASE ; æ“¦é™¤æ¨¡å¼
 			mov mode,1
 		.ENDIF
 	.ELSEIF uMsg == WM_MOUSEMOVE
@@ -232,7 +232,7 @@ WndProc PROC USES ebx ecx edx,
 			INVOKE InvalidateRect, hWnd, ADDR workRegion, 0
 
 		.ENDIF
-		
+
 	.ELSEIF uMsg == WM_LBUTTONDOWN
 		mov drawingFlag, 1
 		mov erasingFlag, 1
@@ -265,7 +265,7 @@ WndProc PROC USES ebx ecx edx,
 				mov edx, curY
 				add ebx, 20
 				add edx, 20
-				
+
 				INVOKE Rectangle, ps.hdc, curX, curY, ebx, edx
 			.ENDIF
 		.ENDIF
